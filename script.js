@@ -27,16 +27,26 @@ window.addEventListener("keyup", (e) => {
 });
 
 function tryTypeKey(key) {
+    if (currentRowIndex >= rows.length) {
+        return;
+    }
+
     key = key.toLowerCase();
 
     if (key.match(/^[a-z]$/) && lettersTyped.length < 5) {
         getCellElement(lettersTyped.length).textContent = key;
         lettersTyped.push(key);
         modifyKeyClass(key, (list) => list.add("pressed"));
-    } else if (key == "backspace" && lettersTyped.length != 0) {
+        return;
+    }
+
+    if (key == "backspace" && lettersTyped.length != 0) {
         getCellElement(lettersTyped.length - 1).textContent = "";
         lettersTyped.pop();
-    } else if (key == "enter" && lettersTyped.length == 5) {
+        return;
+    }
+
+    if (key == "enter" && lettersTyped.length == 5) {
         const typedWord = lettersTyped.join("");
         if (!wordList.includes(typedWord)) {
             return alert("Word not in word list");
@@ -56,7 +66,7 @@ function checkMatchingLetters() {
     lettersTyped.forEach((letter, i) => {
         const letterIndex = remainingLetters.indexOf(letter);
         if (letterIndex != -1) {
-            if (letterIndex == i) {
+            if (targetWord[i] == letter) {
                 getCellElement(i).classList.add("green");
                 modifyKeyClass(letter, (list) => list.add("green"));
             } else {
@@ -64,7 +74,7 @@ function checkMatchingLetters() {
                 modifyKeyClass(letter, (list) => list.add("yellow"));
             }
 
-            remainingLetters[letterIndex] = undefined;
+            remainingLetters.splice(letterIndex, 1);
         } else {
             getCellElement(i).classList.add("grey");
             modifyKeyClass(letter, (list) => list.add("grey"));
@@ -75,10 +85,9 @@ function checkMatchingLetters() {
 function checkWinLose(typedWord) {
     if (typedWord == targetWord) {
         alert("Congratulations! You were correct.");
-        location.reload();
-    } else if (currentRowIndex == 6) {
+        currentRowIndex = rows.length;
+    } else if (currentRowIndex == rows.length) {
         alert(`The word was ${targetWord}.`);
-        location.reload();
     }
 }
 
