@@ -21,10 +21,9 @@ main {
 }
 
 #board {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    display: flex;
     width: fit-content;
-    grid-gap: 0.5rem;
+    flex-direction: column;
 }
 
 .row {
@@ -40,6 +39,7 @@ main {
     display: grid;
     place-items: center;
     font-size: 2rem;
+    margin: 0.2rem;
 }
 
 .green {

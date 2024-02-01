@@ -1,19 +1,21 @@
+const wordLength = ;
+const rowCount = 6;
 const board = document.getElementById("board");
 const keyboard = document.getElementById("keyboard");
-const targetWord = wordList[Math.floor(Math.random() * wordList.length)];
+let targetWord;
+let wordList;
 
-const rows = [];
 let currentRowIndex = 0;
 let lettersTyped = [];
 
 function tryTypeKey(key) {
-    if (currentRowIndex >= rows.length) {
+    if (currentRowIndex >= rowCount) {
         return;
     }
 
     key = key.toLowerCase();
 
-    if (key.match(/^[a-z]$/) && lettersTyped.length < 5) {
+    if (key.match(/^[a-z]$/) && lettersTyped.length < wordLength) {
         getCellElement(lettersTyped.length).textContent = key;
         lettersTyped.push(key);
         return;
@@ -25,7 +27,11 @@ function tryTypeKey(key) {
         return;
     }
 
-    if (key == "enter" && lettersTyped.length == 5) {
+    if (key == "enter" && lettersTyped.length == wordLength) {
+        if (wordList != null) {
+            return alert("Word list not loaded.")
+        }
+
         const typedWord = lettersTyped.join("");
         if (!wordList.includes(typedWord)) {
             return alert("Word not in word list");
@@ -64,8 +70,8 @@ function checkMatchingLetters() {
 function checkWinLose(typedWord) {
     if (typedWord == targetWord) {
         alert("Congratulations! You were correct.");
-        currentRowIndex = rows.length;
-    } else if (currentRowIndex == rows.length) {
+        currentRowIndex = rowCount;
+    } else if (currentRowIndex == rowCount) {
         alert(`The word was ${targetWord}.`);
     }
 }
@@ -78,19 +84,19 @@ function addClassToKey(key, className) {
 }
 
 function getCellElement(index) {
-    return rows[currentRowIndex][index];
+    return board.children[currentRowIndex].children[index];
 }
 
 function createBoard() {
-    for (let i = 0; i < 6; i++) {
-        const row = [];
-        rows.push(row);
+    for (let i = 0; i < rowCount; i++) {
+        const row = document.createElement("div");
+        row.className = "row";
+        board.appendChild(row);
 
-        for (let j = 0; j < 5; j++) {
+        for (let j = 0; j < wordLength; j++) {
             const cell = document.createElement("div");
             cell.className = "cell";
-            row.push(cell);
-            board.appendChild(cell);
+            row.appendChild(cell);
         }
     }
 }
@@ -113,12 +119,11 @@ function createKeyElement(key, keyCode) {
 function makeKeyboardRow(letters) {
     const row = document.createElement("div");
     row.className = "row";
+    keyboard.appendChild(row);
 
     letters.split("").forEach((key) => {
         row.appendChild(createKeyElement(key, key));
     });
-
-    keyboard.appendChild(row);
 }
 
 makeKeyboardRow("qwertyuiop");
@@ -126,3 +131,12 @@ makeKeyboardRow("asdfghjkl");
 makeKeyboardRow("zxcvbnm");
 keyboard.lastChild.prepend(createKeyElement("↵", "enter"));
 keyboard.lastChild.appendChild(createKeyElement("⌫", "backspace"));
+
+async function fetchWordList() {
+    const response = await fetch("wordlist.txt");
+    const data = await response.text();
+    wordList = data.split("\n").filter((word) => word.length == wordLength);
+    targetWord = wordList[Math.floor(Math.random() * wordList.length)];
+}
+
+fetchWordList();
