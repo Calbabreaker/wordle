@@ -17,6 +17,7 @@ body {
 main {
     display: grid;
     place-items: center;
+    user-select: none;
 }
 
 #board {
@@ -66,8 +67,5 @@ main {
     place-items: center;
     margin: 0.2rem;
     border-radius: 5px;
-}
-
-.pressed {
-    background-color: #cccccc;
+    cursor: pointer;
 }
