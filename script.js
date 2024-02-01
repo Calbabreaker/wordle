@@ -1,4 +1,13 @@
-const wordLength = ;
+function getWordLength() {
+    const length = parseInt(new URLSearchParams(location.search).get("length"));
+    if (isNaN(length)) {
+        location.href = "?length=5";
+    }
+
+    return length;
+}
+
+const wordLength = getWordLength();
 const rowCount = 6;
 const board = document.getElementById("board");
 const keyboard = document.getElementById("keyboard");
@@ -28,8 +37,8 @@ function tryTypeKey(key) {
     }
 
     if (key == "enter" && lettersTyped.length == wordLength) {
-        if (wordList != null) {
-            return alert("Word list not loaded.")
+        if (wordList == null) {
+            return alert("Word list not loaded.");
         }
 
         const typedWord = lettersTyped.join("");
