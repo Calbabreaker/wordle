@@ -62,16 +62,16 @@ function checkMatchingLetters() {
         if (letterIndex != -1) {
             if (targetWord[i] == letter) {
                 getCellElement(i).classList.add("green");
-                addClassToKey(letter, "green");
+                modifyKeyState(letter, "green");
             } else {
                 getCellElement(i).classList.add("yellow");
-                addClassToKey(letter, "yellow");
+                modifyKeyState(letter, "yellow");
             }
 
             remainingLetters.splice(letterIndex, 1);
         } else {
             getCellElement(i).classList.add("grey");
-            addClassToKey(letter, "grey");
+            modifyKeyState(letter, "grey");
         }
     });
 }
@@ -85,9 +85,13 @@ function checkWinLose(typedWord) {
     }
 }
 
-function addClassToKey(key, className) {
+function modifyKeyState(key, className) {
     const keyElement = document.querySelector(`[data-key='${key.toLowerCase()}']`);
-    if (keyElement) {
+    if (
+        keyElement &&
+        !keyElement.classList.contains("grey") &&
+        !keyElement.classList.contains("green")
+    ) {
         keyElement.classList.add(className);
     }
 }
@@ -145,7 +149,12 @@ async function fetchWordList() {
     const response = await fetch("wordlist.txt");
     const data = await response.text();
     wordList = data.split("\n").filter((word) => word.length == wordLength);
-    targetWord = wordList[Math.floor(Math.random() * wordList.length)];
+    if (wordList.length == 0) {
+        alert("There are no words with that length.");
+        wordList = null;
+    } else {
+        targetWord = wordList[Math.floor(Math.random() * wordList.length)];
+    }
 }
 
 fetchWordList();
