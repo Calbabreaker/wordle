@@ -55,28 +55,6 @@ function tryTypeKey(key) {
     }
 }
 
-function checkMatchingLetters() {
-    const remainingLetters = targetWord.split("");
-
-    lettersTyped.forEach((letter, i) => {
-        const letterIndex = remainingLetters.indexOf(letter);
-        if (letterIndex != -1) {
-            if (targetWord[i] == letter) {
-                getCellElement(i).classList.add("green");
-                modifyKeyState(letter, "green");
-            } else {
-                getCellElement(i).classList.add("yellow");
-                modifyKeyState(letter, "yellow");
-            }
-
-            remainingLetters.splice(letterIndex, 1);
-        } else {
-            getCellElement(i).classList.add("grey");
-            modifyKeyState(letter, "grey");
-        }
-    });
-}
-
 function checkWinLose(typedWord) {
     if (typedWord == targetWord) {
         alert("Congratulations! You were correct.");
@@ -86,14 +64,34 @@ function checkWinLose(typedWord) {
     }
 }
 
-function modifyKeyState(key, className) {
+function checkMatchingLetters() {
+    const remainingLetters = targetWord.split("");
+
+    lettersTyped.forEach((letter, i) => {
+        const letterIndex = remainingLetters.indexOf(letter);
+        if (letterIndex != -1) {
+            if (targetWord[i] == letter) {
+                getCellElement(i).classList.add("green");
+                addClassToKey(letter, "green");
+            } else {
+                getCellElement(i).classList.add("yellow");
+                addClassToKey(letter, "yellow");
+            }
+
+            remainingLetters.splice(letterIndex, 1);
+        } else {
+            getCellElement(i).classList.add("grey");
+            addClassToKey(letter, "grey");
+        }
+    });
+}
+
+function addClassToKey(key, className) {
     const keyElement = document.querySelector(`[data-key='${key.toLowerCase()}']`);
-    if (
-        keyElement &&
-        !keyElement.classList.contains("grey") &&
-        !keyElement.classList.contains("green")
-    ) {
-        keyElement.classList.add(className);
+    if (keyElement) {
+        if (keyElement.classList.length == 1 || className == "green") {
+            keyElement.className = `key ${className}`;
+        }
     }
 }
 
