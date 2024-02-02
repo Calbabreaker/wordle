@@ -2,13 +2,14 @@ function getWordLength() {
     const length = parseInt(new URLSearchParams(location.search).get("length"));
     if (isNaN(length)) {
         location.href = "?length=5";
+    } else {
+        return length;
     }
-
-    return length;
 }
 
 const wordLength = getWordLength();
 const rowCount = 6;
+
 const board = document.getElementById("board");
 const keyboard = document.getElementById("keyboard");
 let targetWord;

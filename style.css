@@ -11,13 +11,17 @@ body {
         "Open Sans",
         "Helvetica Neue",
         sans-serif;
-    text-transform: uppercase;
 }
 
 main {
     display: grid;
     place-items: center;
     user-select: none;
+    text-transform: uppercase;
+}
+
+h1 {
+    font-size: 3rem;
 }
 
 #board {
